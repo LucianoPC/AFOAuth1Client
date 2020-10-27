@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "AF2OAuth1Client"
-  s.version      = "0.3.6"
+  s.version      = "0.4.0"
   s.summary      = "AFNetworking 2 Extension for OAuth 1.0a Authentication."
   s.homepage     = "https://github.com/AYastrebov/AF2OAuth1Client"
   s.social_media_url = "https://twitter.com/AFNetworking"
@@ -12,10 +12,10 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '6.0'
   s.osx.deployment_target = '10.8'
-  
+
   s.ios.frameworks = 'MobileCoreServices', 'SystemConfiguration', 'Security', 'CoreGraphics'
   s.osx.frameworks = 'CoreServices', 'SystemConfiguration', 'Security'
 
-  s.dependency 'AFNetworking', '~> 2.0'
+  s.dependency 'AFNetworking', '~> 4.0.1'
 
 end
