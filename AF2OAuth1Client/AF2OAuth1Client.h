@@ -243,4 +243,13 @@ extern NSString * const kAFApplicationLaunchOptionsURLKey;
 
 #endif
 
+///---------------------
+/// @name Requesting
+///---------------------
+- (NSURLSessionDataTask *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
+                                   enforceAuthenticatedResponse:(BOOL)enforceAuthenticated
+                                                        success:(void (^)(NSURLSessionDataTask *operation, id responseObject))success
+                                                        failure:(void (^)(NSURLSessionDataTask *operation, NSError *error))failure;
+
 @end
+

@@ -50,7 +50,7 @@ static NSString * AFPercentEscapedQueryStringPairMemberFromStringWithEncoding(NS
     static NSString * const kAFCharactersToBeEscaped = @":/?&=;+!@#$()',*";
     static NSString * const kAFCharactersToLeaveUnescaped = @"[].";
 
-	return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)string, (__bridge CFStringRef)kAFCharactersToLeaveUnescaped, (__bridge CFStringRef)kAFCharactersToBeEscaped, CFStringConvertNSStringEncodingToEncoding(encoding));
+    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)string, (__bridge CFStringRef)kAFCharactersToLeaveUnescaped, (__bridge CFStringRef)kAFCharactersToBeEscaped, CFStringConvertNSStringEncodingToEncoding(encoding));
 }
 
 static NSDictionary * AFParametersFromQueryString(NSString *queryString) {
@@ -148,14 +148,14 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
         return nil;
     }
 
-	self.url = url;
+    self.url = url;
     self.key = clientID;
     self.secret = secret;
     self.signatureMethod = AFHMACSHA1SignatureMethod;
     self.oauthAccessMethod = @"GET";
-	self.defaultHeaders = [NSMutableDictionary dictionary];
-	self.parameterEncoding = AFFormURLParameterEncoding;
-	self.stringEncoding = NSUTF8StringEncoding;
+    self.defaultHeaders = [NSMutableDictionary dictionary];
+    self.parameterEncoding = AFFormURLParameterEncoding;
+    self.stringEncoding = NSUTF8StringEncoding;
     self.responseSerializer = [AFHTTPResponseSerializer serializer];
 
     // Accept-Language HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4
@@ -204,7 +204,7 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
 }
 
 - (void)setDefaultHeader:(NSString *)header value:(NSString *)value {
-	[self.defaultHeaders setValue:value forKey:header];
+    [self.defaultHeaders setValue:value forKey:header];
 }
 
 - (NSDictionary *)OAuthParameters {
@@ -367,7 +367,7 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
     }
 
     NSMutableURLRequest *request = [self requestWithMethod:accessMethod path:path parameters:parameters];
-    NSURLSessionTask *operation = [self GET:request.URL.absoluteString parameters:parameters headers:nil progress:nil success:^(NSURLSessionTask *operation, id responseObject) {
+    NSURLSessionTask *operation = [self HTTPRequestOperationWithRequest:request success:^(NSURLSessionTask *operation, id responseObject) {
         if (success) {
             NSString *responseString = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
             AF2OAuth1Token *accessToken = [[AF2OAuth1Token alloc] initWithQueryString:responseString];
@@ -379,7 +379,7 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
         }
     }];
 
-	[self.operationQueue addOperation:operation];
+    [self.operationQueue addOperation:operation];
 }
 
 - (void)acquireOAuthAccessTokenWithPath:(NSString *)path
@@ -396,7 +396,7 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
         parameters[@"oauth_verifier"] = requestToken.verifier;
 
         NSMutableURLRequest *request = [self requestWithMethod:accessMethod path:path parameters:parameters];
-        NSURLSessionTask *operation = [self GET:request.URL.absoluteString parameters:parameters headers:nil progress:nil success:^(NSURLSessionTask *operation, id responseObject) {
+        NSURLSessionTask *operation = [self HTTPRequestOperationWithRequest:request success:^(NSURLSessionTask *operation, id responseObject) {
             if (success) {
                 NSString *responseString = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
                 AF2OAuth1Token *accessToken = [[AF2OAuth1Token alloc] initWithQueryString:responseString];
@@ -408,7 +408,7 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
             }
         }];
 
-		[self.operationQueue addOperation:operation];
+        [self.operationQueue addOperation:operation];
     } else {
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:NSLocalizedStringFromTable(@"Bad OAuth response received from the server.", @"AFNetworking", nil) forKey:NSLocalizedFailureReasonErrorKey];
         NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorBadServerResponse userInfo:userInfo];
@@ -438,7 +438,7 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
     }
 
     NSURL *url = [NSURL URLWithString:path relativeToURL:self.url];
-	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request setHTTPMethod:method];
     [request setAllHTTPHeaderFields:self.defaultHeaders];
 
@@ -471,7 +471,7 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
         }
     }
 
-	return request;
+    return request;
 }
 
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method
@@ -505,8 +505,8 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
                                              parameters:(NSDictionary *)parameters
                               constructingBodyWithBlock:(void (^)(id <AFMultipartFormData> formData))block
 {
-	NSError *error;
-	NSMutableURLRequest *request = [[AFHTTPSessionManager manager].requestSerializer multipartFormRequestWithMethod:method URLString:self.url.absoluteString parameters:parameters constructingBodyWithBlock:block error:&error];
+    NSError *error;
+    NSMutableURLRequest *request = [[AFHTTPSessionManager manager].requestSerializer multipartFormRequestWithMethod:method URLString:self.url.absoluteString parameters:parameters constructingBodyWithBlock:block error:&error];
 
     // Only use parameters in the HTTP POST request body (with a content-type of `application/x-www-form-urlencoded`).
     // See RFC 5849, Section 3.4.1.3.1 http://tools.ietf.org/html/rfc5849#section-3.4
@@ -520,7 +520,7 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
 #pragma mark - NSCoding
 
 - (id)initWithCoder:(NSCoder *)decoder {
-	self = [super init];
+    self = [super init];
 
     if (!self) {
         return nil;
@@ -532,8 +532,8 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
     self.realm = [decoder decodeObjectForKey:NSStringFromSelector(@selector(realm))];
     self.accessToken = [decoder decodeObjectForKey:NSStringFromSelector(@selector(accessToken))];
     self.oauthAccessMethod = [decoder decodeObjectForKey:NSStringFromSelector(@selector(oauthAccessMethod))];
-	self.defaultHeaders = [decoder decodeObjectForKey:@"defaultHeaders"];
-	self.parameterEncoding = (AFHTTPClientParameterEncoding) [decoder decodeIntegerForKey:@"parameterEncoding"];
+    self.defaultHeaders = [decoder decodeObjectForKey:@"defaultHeaders"];
+    self.parameterEncoding = (AFHTTPClientParameterEncoding) [decoder decodeIntegerForKey:@"parameterEncoding"];
 
     return self;
 }
@@ -545,8 +545,8 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
     [coder encodeObject:self.realm forKey:NSStringFromSelector(@selector(realm))];
     [coder encodeObject:self.accessToken forKey:NSStringFromSelector(@selector(accessToken))];
     [coder encodeObject:self.oauthAccessMethod forKey:NSStringFromSelector(@selector(oauthAccessMethod))];
-	[coder encodeObject:self.defaultHeaders forKey:@"defaultHeaders"];
-	[coder encodeInteger:self.parameterEncoding forKey:@"parameterEncoding"];
+    [coder encodeObject:self.defaultHeaders forKey:@"defaultHeaders"];
+    [coder encodeInteger:self.parameterEncoding forKey:@"parameterEncoding"];
 }
 
 #pragma mark - NSCopying
@@ -557,8 +557,8 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
     copy.realm = self.realm;
     copy.accessToken = self.accessToken;
     copy.oauthAccessMethod = self.oauthAccessMethod;
-	copy.defaultHeaders = [self.defaultHeaders mutableCopyWithZone:zone];
-	copy.parameterEncoding = self.parameterEncoding;
+    copy.defaultHeaders = [self.defaultHeaders mutableCopyWithZone:zone];
+    copy.parameterEncoding = self.parameterEncoding;
 
     return copy;
 }
@@ -754,6 +754,16 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
     copy.userInfo = self.userInfo;
 
     return copy;
+}
+
+- (NSURLSessionDataTask *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
+                                   enforceAuthenticatedResponse:(BOOL)enforceAuthenticated
+                                                        success:(void (^)(NSURLSessionDataTask *operation, id responseObject))success
+                                                        failure:(void (^)(NSURLSessionDataTask *operation, NSError *error))failure
+{
+    NSURLSessionDataTask *operation = [self GET:urlRequest.URL.absoluteString parameters:parameters headers:nil progress:nil success:success failure:failure];
+
+    return operation;
 }
 
 @end
