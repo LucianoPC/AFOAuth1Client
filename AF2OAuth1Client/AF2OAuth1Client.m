@@ -563,6 +563,28 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
     return copy;
 }
 
+- (NSURLSessionTask *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
+                                              success:(void (^)(NSURLSessionTask *operation, id responseObject))success
+                                              failure:(void (^)(NSURLSessionTask *operation, NSError *error))failure
+{
+    NSURLSessionTask *operation = [self dataTaskWithRequest:urlRequest uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+
+        if (!error) {
+            if (success) {
+                success(operation, responseObject);
+            }
+        } else {
+            if (failure) {
+                failure(operation, error);
+            }
+        }
+    }];
+
+    operation.resume;
+
+    return operation;
+}
+
 @end
 
 @implementation AF2OAuth1Token
@@ -756,15 +778,6 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
     return copy;
 }
 
-- (NSURLSessionDataTask *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
-                                   enforceAuthenticatedResponse:(BOOL)enforceAuthenticated
-                                                        success:(void (^)(NSURLSessionDataTask *operation, id responseObject))success
-                                                        failure:(void (^)(NSURLSessionDataTask *operation, NSError *error))failure
-{
-    NSURLSessionDataTask *operation = [self GET:urlRequest.URL.absoluteString parameters:parameters headers:nil progress:nil success:success failure:failure];
-
-    return operation;
-}
-
 @end
+
 

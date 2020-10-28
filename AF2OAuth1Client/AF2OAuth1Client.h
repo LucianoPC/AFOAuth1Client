@@ -120,6 +120,14 @@ typedef void (^AFServiceProviderRequestCompletionBlock)();
  */
 - (void)setServiceProviderRequestHandler:(void (^)(NSURLRequest *request))block
                               completion:(void (^)())completion;
+
+
+///---------------------
+/// @name Requesting
+///---------------------
+- (NSURLSessionTask *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
+                                              success:(void (^)(NSURLSessionTask *operation, id responseObject))success
+                                              failure:(void (^)(NSURLSessionTask *operation, NSError *error))failure;
 @end
 
 ///----------------
@@ -243,13 +251,6 @@ extern NSString * const kAFApplicationLaunchOptionsURLKey;
 
 #endif
 
-///---------------------
-/// @name Requesting
-///---------------------
-- (NSURLSessionDataTask *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
-                                   enforceAuthenticatedResponse:(BOOL)enforceAuthenticated
-                                                        success:(void (^)(NSURLSessionDataTask *operation, id responseObject))success
-                                                        failure:(void (^)(NSURLSessionDataTask *operation, NSError *error))failure;
-
 @end
+
 
