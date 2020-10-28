@@ -24,7 +24,7 @@ typedef void (^AFServiceProviderRequestCompletionBlock)();
 
 @class AF2OAuth1Token;
 
-@interface AF2OAuth1Client : AFHTTPRequestOperationManager 
+@interface AF2OAuth1Client : AFHTTPSessionManager
 @property (readwrite, nonatomic, copy) NSURL *url;
 @property (readwrite, nonatomic, copy) NSString *key;
 @property (readwrite, nonatomic, copy) NSString *secret;
@@ -36,22 +36,22 @@ typedef void (^AFServiceProviderRequestCompletionBlock)();
 ///-----------------------------------
 
 /**
- 
+
  */
 @property (nonatomic, assign) AFOAuthSignatureMethod signatureMethod;
 
 /**
- 
+
  */
 @property (nonatomic, copy) NSString *realm;
 
 /**
- 
+
  */
 @property (nonatomic, strong) AF2OAuth1Token *accessToken;
 
 /**
- 
+
  */
 @property (nonatomic, strong) NSString *oauthAccessMethod;
 
@@ -70,7 +70,7 @@ typedef void (^AFServiceProviderRequestCompletionBlock)();
 ///---------------------
 
 /**
- 
+
  */
 - (id)initWithBaseURL:(NSURL *)url
                   key:(NSString *)key
@@ -81,7 +81,7 @@ typedef void (^AFServiceProviderRequestCompletionBlock)();
 ///---------------------
 
 /**
- 
+
  */
 - (void)authorizeUsingOAuthWithRequestTokenPath:(NSString *)requestTokenPath
                           userAuthorizationPath:(NSString *)userAuthorizationPath
@@ -93,7 +93,7 @@ typedef void (^AFServiceProviderRequestCompletionBlock)();
                                         failure:(void (^)(NSError *error))failure;
 
 /**
- 
+
  */
 - (void)acquireOAuthRequestTokenWithPath:(NSString *)path
                              callbackURL:(NSURL *)url
@@ -103,7 +103,7 @@ typedef void (^AFServiceProviderRequestCompletionBlock)();
                                  failure:(void (^)(NSError *error))failure;
 
 /**
- 
+
  */
 - (void)acquireOAuthAccessTokenWithPath:(NSString *)path
                            requestToken:(AF2OAuth1Token *)requestToken
@@ -116,7 +116,7 @@ typedef void (^AFServiceProviderRequestCompletionBlock)();
 ///----------------------------------------------------
 
 /**
- 
+
  */
 - (void)setServiceProviderRequestHandler:(void (^)(NSURLRequest *request))block
                               completion:(void (^)())completion;
@@ -127,65 +127,65 @@ typedef void (^AFServiceProviderRequestCompletionBlock)();
 ///----------------
 
 /**
- 
+
  */
 extern NSString * const kAFApplicationLaunchedWithURLNotification;
 
 /**
- 
+
  */
 extern NSString * const kAFApplicationLaunchOptionsURLKey;
 
 #pragma mark -
 
 /**
- 
+
  */
 @interface AF2OAuth1Token : NSObject <NSCoding, NSCopying>
 
 /**
- 
+
  */
 @property (readwrite, nonatomic, copy) NSString *key;
 
 /**
- 
+
  */
 @property (readwrite, nonatomic, copy) NSString *secret;
 
 /**
- 
+
  */
 @property (readwrite, nonatomic, copy) NSString *session;
 
 @property (readwrite, nonatomic, strong) NSDate *expiration;
 /**
- 
+
  */
 @property (nonatomic, copy) NSString *verifier;
 
 /**
- 
+
  */
 @property (readwrite, nonatomic, assign, getter = canBeRenewed) BOOL renewable;
 
 /**
- 
+
  */
 @property (readonly, nonatomic, assign, getter = isExpired) BOOL expired;
 
 /**
- 
+
  */
 @property (nonatomic, strong) NSDictionary *userInfo;
 
 /**
- 
+
  */
 - (id)initWithQueryString:(NSString *)queryString;
 
 /**
- 
+
  */
 - (id)initWithKey:(NSString *)key
            secret:(NSString *)secret
@@ -201,10 +201,10 @@ extern NSString * const kAFApplicationLaunchOptionsURLKey;
 /**
  Stores the specified OAuth token for a given web service identifier in the Keychain
  with the default Keychain Accessibilty of kSecAttrAccessibleWhenUnlocked.
- 
+
  @param token The OAuth credential to be stored.
  @param identifier The service identifier associated with the specified token.
- 
+
  @return Whether or not the credential was stored in the keychain.
  */
 + (BOOL)storeCredential:(AF2OAuth1Token *)credential
@@ -212,11 +212,11 @@ extern NSString * const kAFApplicationLaunchOptionsURLKey;
 
 /**
  Stores the specified OAuth token for a given web service identifier in the Keychain.
- 
+
  @param token The OAuth credential to be stored.
  @param identifier The service identifier associated with the specified token.
  @param securityAccessibility The Keychain security accessibility to store the credential with.
- 
+
  @return Whether or not the credential was stored in the keychain.
  */
 + (BOOL)storeCredential:(AF2OAuth1Token *)credential
@@ -225,18 +225,18 @@ extern NSString * const kAFApplicationLaunchOptionsURLKey;
 
 /**
  Retrieves the OAuth credential stored with the specified service identifier from the Keychain.
- 
+
  @param identifier The service identifier associated with the specified credential.
- 
+
  @return The retrieved OAuth token.
  */
 + (AF2OAuth1Token *)retrieveCredentialWithIdentifier:(NSString *)identifier;
 
 /**
  Deletes the OAuth token stored with the specified service identifier from the Keychain.
- 
+
  @param identifier The service identifier associated with the specified token.
- 
+
  @return Whether or not the token was deleted from the keychain.
  */
 + (BOOL)deleteCredentialWithIdentifier:(NSString *)identifier;
