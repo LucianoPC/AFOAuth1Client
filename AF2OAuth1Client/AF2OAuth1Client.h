@@ -125,9 +125,9 @@ typedef void (^AFServiceProviderRequestCompletionBlock)();
 ///---------------------
 /// @name Requesting
 ///---------------------
-- (NSURLSessionTask *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
-                                              success:(void (^)(NSURLSessionTask *operation, id responseObject))success
-                                              failure:(void (^)(NSURLSessionTask *operation, NSError *error))failure;
+- (NSURLSessionDataTask *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
+                                              success:(void (^)(NSURLSessionDataTask *operation, id responseObject))success
+                                              failure:(void (^)(NSURLSessionDataTask *operation, NSError *error))failure;
 @end
 
 ///----------------

@@ -367,13 +367,13 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
     }
 
     NSMutableURLRequest *request = [self requestWithMethod:accessMethod path:path parameters:parameters];
-    NSURLSessionTask *operation = [self HTTPRequestOperationWithRequest:request success:^(NSURLSessionTask *operation, id responseObject) {
+    NSURLSessionDataTask *operation = [self HTTPRequestOperationWithRequest:request success:^(NSURLSessionDataTask *operation, id responseObject) {
         if (success) {
             NSString *responseString = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
             AF2OAuth1Token *accessToken = [[AF2OAuth1Token alloc] initWithQueryString:responseString];
             success(accessToken, responseObject);
         }
-    } failure:^(NSURLSessionTask *operation, NSError *error) {
+    } failure:^(NSURLSessionDataTask *operation, NSError *error) {
         if (failure) {
             failure(error);
         }
@@ -396,13 +396,13 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
         parameters[@"oauth_verifier"] = requestToken.verifier;
 
         NSMutableURLRequest *request = [self requestWithMethod:accessMethod path:path parameters:parameters];
-        NSURLSessionTask *operation = [self HTTPRequestOperationWithRequest:request success:^(NSURLSessionTask *operation, id responseObject) {
+        NSURLSessionDataTask *operation = [self HTTPRequestOperationWithRequest:request success:^(NSURLSessionDataTask *operation, id responseObject) {
             if (success) {
                 NSString *responseString = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
                 AF2OAuth1Token *accessToken = [[AF2OAuth1Token alloc] initWithQueryString:responseString];
                 success(accessToken, responseObject);
             }
-        } failure:^(NSURLSessionTask *operation, NSError *error) {
+        } failure:^(NSURLSessionDataTask *operation, NSError *error) {
             if (failure) {
                 failure(error);
             }
@@ -563,11 +563,11 @@ static NSDictionary * AFKeychainQueryDictionaryWithIdentifier(NSString *identifi
     return copy;
 }
 
-- (NSURLSessionTask *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
-                                              success:(void (^)(NSURLSessionTask *operation, id responseObject))success
-                                              failure:(void (^)(NSURLSessionTask *operation, NSError *error))failure
+- (NSURLSessionDataTask *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
+                                              success:(void (^)(NSURLSessionDataTask *operation, id responseObject))success
+                                              failure:(void (^)(NSURLSessionDataTask *operation, NSError *error))failure
 {
-    NSURLSessionTask *operation = [self dataTaskWithRequest:urlRequest uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+    NSURLSessionDataTask *operation = [self dataTaskWithRequest:urlRequest uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
 
         if (!error) {
             if (success) {
